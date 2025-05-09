@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 use App\Models\guru;
 use App\Models\siswa;
+use App\Models\pkl;
+use App\Models\industri;
+
 
 
 
@@ -17,6 +20,9 @@ Route::view('dashboard', 'dashboard')
 
 Route::view('/guru',  'guru', ['guru' => guru::all()])->name('guru');
 Route::view('/siswa',  'siswa', ['siswa' => siswa::all()])->name('siswa');
+Route::view('/pkl',  'pkl', ['pkl' => pkl::all()])->name('pkl');
+Route::view('/industri',  'industri', ['industri' => industri::all()])->name('industri');
+
 
 
 
