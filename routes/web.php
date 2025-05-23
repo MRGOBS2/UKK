@@ -1,37 +1,40 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Middleware\RedirectIfAdmin;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Route;
-use Livewire\Volt\Volt;
-use App\Models\guru;
-use App\Models\siswa;
-use App\Models\pkl;
-use App\Models\industri;
-
-
 
 
 Route::get('/', function () {
     return view('welcome');
-})->name('home');
-
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
-
-Route::view('/guru',  'guru', ['guru' => guru::all()])->name('guru');
-Route::view('/siswa',  'siswa', ['siswa' => siswa::all()])->name('siswa');
-Route::view('/pkl',  'pkl', ['pkl' => pkl::all()])->name('pkl');
-Route::view('/industri',  'industri', ['industri' => industri::all()])->name('industri');
-
-
-
-
-Route::middleware(['auth'])->group(function () {
-    Route::redirect('settings', 'settings/profile');
-
-    Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
-    Volt::route('settings/password', 'settings.password')->name('settings.password');
-    Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
 });
 
-require __DIR__.'/auth.php';
+Route::middleware(['auth','verified',RedirectIfAdmin::class])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
+
+    Route::get('/profile', [AuthController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [AuthController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [AuthController::class, 'destroy'])->name('profile.destroy');
+});
+
+
+// Route::middleware('auth')->group(function () {
+//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// });
+
+require __DIR__ . '/auth.php';
+
+
+Route::get('/siswa', function (): View {
+    return view('siswa');
+})->name('siswa');
+
+Route::fallback(function () {
+    abort('404','Page not found');
+});
