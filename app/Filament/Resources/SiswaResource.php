@@ -62,7 +62,9 @@ class SiswaResource extends Resource
                     ->label('Foto siswa')
                     ->openable()
                     ->image()
+                    ->disk('public')
                     ->required()
+                    ->directory('foto')       
                     ->previewable(),
 
                 //menambah roles
@@ -80,31 +82,32 @@ class SiswaResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nama')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('nis')
-                    ->label('NIS')  
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('alamat')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('kontak')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
-
-                //image
-
-
-                Tables\Columns\IconColumn::make('status_pkl')
-                    ->boolean()
-                    ,
+                    Tables\Columns\ImageColumn::make('foto')
+                        ->label('Foto')
+                        ->circular()
+                        ->size(40),
+                
+                    Tables\Columns\TextColumn::make('nama')
+                        ->searchable()
+                        ->weight('medium'),
+                
+                    Tables\Columns\TextColumn::make('nis')
+                        ->label('NIS')
+                        ->searchable(),
+                
+                    Tables\Columns\TextColumn::make('alamat')->searchable(),
+                    Tables\Columns\TextColumn::make('kontak')->searchable(),
+                    Tables\Columns\TextColumn::make('email')->searchable(),
+                
+                    Tables\Columns\IconColumn::make('status_pkl')->boolean(),
+                ])
+                
                 // Tables\Columns\TextColumn::make('roles')
                 //     ->label('Role')
                 //     ->formatStateUsing(function ($state, $record) {
                 //         return $record->getRoleNames()->join(', ');
                 //     }),
 
-            ])
             ->filters([
                 //
             ])

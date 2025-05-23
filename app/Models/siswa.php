@@ -9,7 +9,7 @@ class siswa extends Model
 {
     use HasRoles;
     
-    protected $fillable = ['nama', 'nis', 'gender', 'alamat', 'kontak', 'email','foto', 'status_pkl'];
+    protected $fillable = ['foto' ,'nama', 'nis', 'gender', 'alamat', 'kontak', 'email','foto', 'status_pkl'];
 
     public function pkl()
     {

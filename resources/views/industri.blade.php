@@ -7,8 +7,7 @@
                 <thead class="bg-neutral-200 dark:bg-neutral-700">
                     <tr>
                         <th class="border border-neutral-300 dark:border-neutral-600 px-4 py-2">Nama industri</th>
-                        <th class="border border-neutral-300 dark:border-neutral-600 px-4 py-2">NIP</th>
-                        <th class="border border-neutral-300 dark:border-neutral-600 px-4 py-2">Gender</th>
+                        <th class="border border-neutral-300 dark:border-neutral-600 px-4 py-2">Bidang Usaha</th>
                         <th class="border border-neutral-300 dark:border-neutral-600 px-4 py-2">Alamat</th>
                         <th class="border border-neutral-300 dark:border-neutral-600 px-4 py-2">Kontak</th>
                         <th class="border border-neutral-300 dark:border-neutral-600 px-4 py-2">Email</th>
@@ -18,8 +17,7 @@
                     @foreach ($industri as $industri)
                         <tr class="odd:bg-neutral-100 dark:odd:bg-neutral-700">
                             <td class="border border-neutral-300 dark:border-neutral-600 px-4 py-2 text-black">{{ $industri->nama }}</td>
-                            <td class="border border-neutral-300 dark:border-neutral-600 px-4 py-2 text-black">{{ $industri->nis }}</td>
-                            <td class="border border-neutral-300 dark:border-neutral-600 px-4 py-2 text-black">{{ $industri->gender }}</td>
+                            <td class="border border-neutral-300 dark:border-neutral-600 px-4 py-2 text-black">{{ $industri->bidang_usaha }}</td>
                             <td class="border border-neutral-300 dark:border-neutral-600 px-4 py-2 text-black">{{ $industri->alamat }}</td>
                             <td class="border border-neutral-300 dark:border-neutral-600 px-4 py-2 text-black">{{ $industri->kontak }}</td>
                             <td class="border border-neutral-300 dark:border-neutral-600 px-4 py-2 text-black">{{ $industri->email }}</td>
