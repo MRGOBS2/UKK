@@ -34,6 +34,7 @@ class UserResource extends Resource
                 Forms\Components\Select::make('roles')  
                     ->relationship('roles', 'name')
                     ->preload()
+                    ->multiple()
                     ->searchable(),
                 Forms\Components\TextInput::make('password')
                     ->password()

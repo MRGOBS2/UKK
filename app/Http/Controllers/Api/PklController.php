@@ -1,86 +1,36 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+use Illuminate\Support\Facades\Route;
+use Livewire\Volt\Volt;
+use App\Http\Controllers\AuthController;
 
-use App\Http\Controllers\Controller;
-use App\Models\Pkl;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+Route::get('/', function () {
+    return view('welcome');
+})->name('home');
 
-class IndustriController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        // Menampilkan semua data guru dari tabel
-        $pkl = Pkl::get();
-        return response()->json($pkl, 200);
-    }
+Route::view('dashboard', 'dashboard')
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'nama_siswa' => 'required|string|max:255',
-            'nama_industri' => 'required|string|max:255',
-            'nama_guru' => 'required|string|max:255',
-            'mulai' => 'required|date',
-            'selesai' => 'required|date|after_or_equal:mulai',
-        ]);
+Route::get('/pkl', function () {
+    return "Halaman PKL";
+})->middleware(['auth', 'verified'])->name('pkl');
 
-        // Jika validasi gagal, hentikan eksekusi dan berikan pesan error
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validasi gagal! Silakan cek kembali input Anda.',
-                'errors' => $validator->errors()
-            ], 422);
-        }
 
-        // Jika validasi berhasil, simpan data guru
-        $industri = Industri::create($request->all());
+// Halaman siswa bisa diakses oleh siapa pun yang login & terverifikasi
+Route::get('/siswa', function () {
+    return "Siswa";
+})->middleware(['auth', 'verified'])
+ ->name('siswa');
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Guru Berhasil Disimpan!',
-            'industri' => $industri
-        ], 201);
-    }
+// Rute untuk pengaturan (settings), hanya untuk user yang login
+Route::middleware(['auth'])->group(function () {
+    Route::redirect('settings', 'settings/profile');
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        $industri = Industri::find($id);
-        return response()->json($industri, 200);
-    }
+    Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
+    Volt::route('settings/password', 'settings.password')->name('settings.password');
+    Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
+});
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        $industri = Industr::find($id);
-        $industri->nama = $request->nama;
-        $industri->bidang_usaha = $request->bidang_usaha;
-        $industri->alamat = $request->alamat;
-        $industri->kontak = $request->kontak;
-        $industri->email = $request->email;
-        $industri->save();
-        return response()->json($industri, 200);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        Industri::destroy($id);
-        return response()->json(["message" => "Deleted"], 200);
-    }
-}
+// Route tambahan dari Laravel Breeze/Fortify/etc
+require __DIR__.'/auth.php';

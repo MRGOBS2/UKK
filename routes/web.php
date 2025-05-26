@@ -1,40 +1,62 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Middleware\RedirectIfAdmin;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Route;
-
+use Livewire\Volt\Volt;
+use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('welcome');
+})->name('home');
+
+Route::view('dashboard', 'dashboard')
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
+
+Route::view('industri', 'industri')
+    ->middleware(['auth', 'verified'])
+    ->name('industri');
+
+
+//membuat ujicoba dengan role siswa dapat akses fe
+Route::get('/siswa', function () {
+    return "Siswa";
+})->middleware(['auth', 'verified','role:siswa','cek_user'])
+ ->name('siswa');
+
+//membuat peraturan role siswa dapat akses fe
+Route::middleware(['auth', 'verified', 'role:siswa', 'cek_user'])->group(function () {
+    Route::view('dashboard', 'dashboard')->name('dashboard');
+    Route::view('industri', 'industri')->name('industri');
 });
 
-Route::middleware(['auth','verified',RedirectIfAdmin::class])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
 
+// //membuat ujicoba dengan role siswa dapat akses fe
+// Route::get('/siswa', function () {
+//     return "Siswa";
+// })->middleware(['auth', 'verified','role:siswa','cek_user'])
+//  ->name('siswa');
 
-    Route::get('/profile', [AuthController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [AuthController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [AuthController::class, 'destroy'])->name('profile.destroy');
-});
-
-
-// Route::middleware('auth')->group(function () {
-//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+//membuat peraturan role siswa dapat akses fe
+// Route::middleware(['auth', 'verified', 'role:siswa', 'cek_user'])->group(function () {
+//     Route::view('dashboard', 'dashboard')->name('dashboard');
 // });
 
-require __DIR__ . '/auth.php';
+// Route::middleware(['auth', 'verified', 'role:guru', 'cek_guru'])->group(function () {
+//    Route::get('/guru', function (){
+//     return "Guru";
+//    })->name('login'); 
+// });
 
 
-Route::get('/siswa', function (): View {
-    return view('siswa');
-})->name('siswa');
 
-Route::fallback(function () {
-    abort('404','Page not found');
+Route::middleware(['auth'])->group(function () {
+    Route::redirect('settings', 'settings/profile');
+
+    Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
+    Volt::route('settings/password', 'settings.password')->name('settings.password');
+    Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
 });
+
+//Route::get('/users', [AuthController::class, 'index']);
+
+require __DIR__.'/auth.php';
